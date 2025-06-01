@@ -22,7 +22,7 @@ joelsfastapi:latest
 
 
 
-# How do i docker build an image (based on a github repository contents)
+## How to build a docker image (based on a github repository contents)
 To Docker build an image based on the contents of a GitHub repository, you generally have two main approaches:
 
 1.  **Clone the repository locally and then build the image.** This is the most common and often the simplest method.
@@ -89,7 +89,7 @@ docker run -p 80:80 getting-started-app:latest
 
 ---
 
-### Method 2: Build Directly from GitHub Repository URL (Less Common, Some Limitations)
+## Method 2: Build Directly from GitHub Repository URL (Less Common, Some Limitations)
 
 Docker has a feature to build directly from a Git repository URL. This is convenient if you don't want to clone the repo locally, but it assumes the `Dockerfile` is at the root of the repository or a specified subdirectory.
 
@@ -127,7 +127,7 @@ docker build -t my-github-app:dev https://github.com/your-username/your-reposito
 
 ---
 
-### Essential Considerations:
+## Essential Considerations:
 
 * **Dockerfile:** The core of your Docker image. Ensure your GitHub repository contains a well-defined `Dockerfile` that specifies how your application should be built and run.
 * **`.dockerignore`:** Similar to `.gitignore`, a `.dockerignore` file in your repository can prevent unnecessary files from being sent to the Docker daemon during the build process, speeding up builds and reducing image size.
@@ -152,7 +152,7 @@ Choose the method that best suits your workflow and the specifics of the GitHub 
 
 
 
-# What is i have a problem accessing the localhost with the build
+# What if there is a problem accessing the localhost with the build
 The error "localhost didn't send any data" when trying to access your FastAPI container at `http://localhost:8000` usually means one of a few things:
 
 1.  **Your FastAPI application isn't actually running or listening on the correct port *inside* the container.** This is the most common reason.
@@ -161,7 +161,7 @@ The error "localhost didn't send any data" when trying to access your FastAPI co
 
 Let's go through the debugging steps and how to fix them:
 
-### Step 1: Verify the Docker Container is Running Correctly
+## Step 1: Verify the Docker Container is Running Correctly
 
 First, ensure your container is actually up and not immediately exiting.
 
@@ -177,7 +177,7 @@ docker ps
 **If the container is NOT listed or shows `Exited (...)`:**
 This means your application inside the container failed to start. Proceed to Step 2.
 
-### Step 2: Check the Container Logs for Errors (CRITICAL!)
+## Step 2: Check the Container Logs for Errors (CRITICAL!)
 
 This is the most important step for debugging. It will tell you what's happening inside your container.
 
@@ -217,7 +217,7 @@ docker logs my-fastapi-container
             * **Windows (PowerShell):** `Get-NetTCPConnection -LocalPort 8000`
         4.  Try running your container on a different host port, e.g., `docker run -d -p 8001:8000 --name my-fastapi-container your-fastapi-app:latest` and then access `http://localhost:8001`.
 
-### Step 3: Ensure Correct Port Mapping in `docker run`
+## Step 3: Ensure Correct Port Mapping in `docker run`
 
 Double-check your `docker run` command's `-p` flag.
 
@@ -230,7 +230,7 @@ docker run -d -p HOST_PORT:CONTAINER_PORT --name my-fastapi-container your-fasta
 
 **Common Mistake:** If your FastAPI app is listening on `8000` inside the container, but you accidentally used `-p 80:8000`, you'd need to go to `http://localhost:80`. Make sure `HOST_PORT` and `CONTAINER_PORT` match your expectations.
 
-### Step 4: Ensure FastAPI Binds to `0.0.0.0` Inside the Container
+## Step 4: Ensure FastAPI Binds to `0.0.0.0` Inside the Container
 
 This is a very common issue for "didn't send data". By default, Uvicorn (what FastAPI uses) often binds to `127.0.0.1` (localhost). Inside a Docker container, `127.0.0.1` refers *only* to the container itself, making it inaccessible from outside the container (even if ports are mapped). You need to bind to `0.0.0.0` to allow external connections.
 
